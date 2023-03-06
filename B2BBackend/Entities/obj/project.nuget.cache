@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "CHy7VktCjWKehGvga3ZdYN3RTaJn5414ty50tST4kmfBHz2aZuA8VtHLxwFuhQ3P8NKgMD4m4YZyyJo/tmleBw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\uzayk\\source\\repos\\B2B_Project\\B2BBackend\\Entities\\Entities.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\uzayk\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
+    "C:\\Users\\uzayk\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.1\\microsoft.extensions.primitives.5.0.1.nupkg.sha512",
+    "C:\\Users\\uzayk\\.nuget\\packages\\system.io.pipelines\\5.0.2\\system.io.pipelines.5.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}
