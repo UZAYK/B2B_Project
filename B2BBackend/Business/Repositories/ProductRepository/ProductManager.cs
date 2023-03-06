@@ -26,7 +26,7 @@ namespace Business.Repositories.ProductRepository
             _productDal = productDal;
         }
 
-        [SecuredAspect()]
+        [SecuredAspect("Admin,Product.add")]
         [ValidationAspect(typeof(ProductValidator))]
         [RemoveCacheAspect("IProductService.Get")]
 
@@ -36,7 +36,7 @@ namespace Business.Repositories.ProductRepository
             return new SuccessResult(ProductMessages.Added);
         }
 
-        [SecuredAspect()]
+        [SecuredAspect("Admin,Product.update")]
         [ValidationAspect(typeof(ProductValidator))]
         [RemoveCacheAspect("IProductService.Get")]
 
@@ -46,7 +46,7 @@ namespace Business.Repositories.ProductRepository
             return new SuccessResult(ProductMessages.Updated);
         }
 
-        [SecuredAspect()]
+        [SecuredAspect("Admin,Product.delete")]
         [RemoveCacheAspect("IProductService.Get")]
 
         public async Task<IResult> Delete(Product product)
@@ -55,7 +55,7 @@ namespace Business.Repositories.ProductRepository
             return new SuccessResult(ProductMessages.Deleted);
         }
 
-        [SecuredAspect()]
+        [SecuredAspect("Admin,Product.get")]
         [CacheAspect()]
         [PerformanceAspect()]
         public async Task<IDataResult<List<Product>>> GetList()
@@ -63,7 +63,7 @@ namespace Business.Repositories.ProductRepository
             return new SuccessDataResult<List<Product>>(await _productDal.GetAll());
         }
 
-        [SecuredAspect()]
+        [SecuredAspect("Admin,Product.get")]
         public async Task<IDataResult<Product>> GetById(int id)
         {
             return new SuccessDataResult<Product>(await _productDal.Get(p => p.Id == id));
