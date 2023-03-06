@@ -26,7 +26,7 @@ namespace Business.Repositories.OrderRepository
             _orderDal = orderDal;
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [ValidationAspect(typeof(OrderValidator))]
         [RemoveCacheAspect("IOrderService.Get")]
 

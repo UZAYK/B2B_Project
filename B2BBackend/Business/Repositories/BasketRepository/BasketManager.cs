@@ -26,7 +26,7 @@ namespace Business.Repositories.BasketRepository
             _basketDal = basketDal;
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [ValidationAspect(typeof(BasketValidator))]
         [RemoveCacheAspect("IBasketService.Get")]
 

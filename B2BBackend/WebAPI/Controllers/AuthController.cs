@@ -32,7 +32,18 @@ namespace WebAPI.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Login(LoginAuthDto authDto)
         {
-            var result = await _authService.Login(authDto);
+            var result = await _authService.UserLogin(authDto);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> CustomerLogin(CustomerLoginDto customerLogin)
+        {
+            var result = await _authService.CustomerLogin(customerLogin);
             if (result.Success)
             {
                 return Ok(result);

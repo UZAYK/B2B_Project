@@ -26,7 +26,7 @@ namespace Business.Repositories.ProductImageRepository
             _productImageDal = productImageDal;
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [ValidationAspect(typeof(ProductImageValidator))]
         [RemoveCacheAspect("IProductImageService.Get")]
 

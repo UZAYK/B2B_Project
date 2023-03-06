@@ -21,7 +21,7 @@ namespace Business.Repositories.EmailParameterRepository
             _emailParameterDal = emailParameterDal;
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [ValidationAspect(typeof(EmailParameterValidator))]
         [RemoveCacheAspect("IEmailParameterService.Get")]
         public async Task<IResult> Add(EmailParameter emailParameter)

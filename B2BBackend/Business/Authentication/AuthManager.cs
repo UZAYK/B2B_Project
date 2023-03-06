@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Aspects.Secured;
+using Business.Repositories.CustomerRepository;
 using Business.Repositories.UserRepository;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Validation;
@@ -16,15 +17,17 @@ namespace Business.Authentication
     public class AuthManager : IAuthService
     {
         private readonly IUserService _userService;
+        private readonly ICustomerService _customerService;
         private readonly ITokenHandler _tokenHandler;
 
-        public AuthManager(IUserService userService, ITokenHandler tokenHandler)
+        public AuthManager(IUserService userService, ITokenHandler tokenHandler, ICustomerService customerService)
         {
             _userService = userService;
+            _customerService = customerService;
             _tokenHandler = tokenHandler;
         }
 
-        public async Task<IDataResult<Token>> Login(LoginAuthDto loginDto)
+        public async Task<IDataResult<Token>> UserLogin(LoginAuthDto loginDto)
         {
             var user = await _userService.GetByEmail(loginDto.Email);
             if (user == null)
@@ -39,7 +42,27 @@ namespace Business.Authentication
             if (result)
             {
                 Token token = new();
-                token = _tokenHandler.CreateToken(user, operationClaims);
+                token = _tokenHandler.CreateUserToken(user, operationClaims);
+                return new SuccessDataResult<Token>(token);
+            }
+            return new ErrorDataResult<Token>("Kullanıcı maili ya da şifre bilgisi yanlış");
+        }
+        public async Task<IDataResult<Token>> CustomerLogin(CustomerLoginDto customerLoginDto)
+        {
+            var customer = await _customerService.GetByEmail(customerLoginDto.Email);
+            if (customer == null)
+                return new ErrorDataResult<Token>("Kullanıcı maili sistemde bulunamadı!");
+
+            //if (!user.IsConfirm)
+            //    return new ErrorDataResult<Token>("Kullanıcı maili onaylanmamış!");
+
+            var result = HashingHelper.VerifyPasswordHash(customerLoginDto.Password, customer.PasswordHash, customer.PasswordSalt);
+            List<OperationClaim> operationClaims = await _userService.GetUserOperationClaims(customer.Id);
+
+            if (result)
+            {
+                Token token = new();
+                token = _tokenHandler.CreateCustomerToken(customer);
                 return new SuccessDataResult<Token>(token);
             }
             return new ErrorDataResult<Token>("Kullanıcı maili ya da şifre bilgisi yanlış");
