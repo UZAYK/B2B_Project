@@ -58,6 +58,7 @@ namespace WebApi.Controllers
             }
             return BadRequest(result.Message);
         }
+
         [HttpGet("[action]/{customerId}")]
         public async Task<IActionResult> GetProductList(int customerId)
         {
@@ -79,6 +80,5 @@ namespace WebApi.Controllers
             }
             return BadRequest(result.Message);
         }
-
     }
 }

@@ -67,6 +67,5 @@ namespace Business.Repositories.ProductRepository
         {
             return new SuccessDataResult<Product>(await _productDal.Get(p => p.Id == id));
         }
-       
     }
 }

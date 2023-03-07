@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Core.DataAccess.EntityFramework;
-using Entities.Concrete;
-using DataAccess.Repositories.ProductRepository;
 using DataAccess.Context.EntityFramework;
+using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories.ProductRepository
@@ -29,7 +23,7 @@ namespace DataAccess.Repositories.ProductRepository
                                  context.PriceListDetails.Where(x => x.PriceListId == customerRelationship.PriceListId && x.ProductId == product.Id).Select(x => x.Price).FirstOrDefault()
                                  : 0,
                              };
-                return await result.OrderBy(x=>x.Name).ToListAsync();
+                return await result.OrderBy(x => x.Name).ToListAsync();
             }
         }
     }

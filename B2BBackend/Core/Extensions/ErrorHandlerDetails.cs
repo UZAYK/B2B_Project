@@ -13,6 +13,7 @@ namespace Core.Extensions
             return JsonConvert.SerializeObject(this);
         }
     }
+
     public class ValidationErrorDetails : ErrorHandlerDetails
     {
         public IEnumerable<ValidationFailure> Errors { get; set; }

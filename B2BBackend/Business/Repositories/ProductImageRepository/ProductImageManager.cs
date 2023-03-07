@@ -1,22 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.Repositories.ProductImageRepository;
-using Entities.Concrete;
+using Business.Abstract;
 using Business.Aspects.Secured;
-using Core.Aspects.Validation;
+using Business.Repositories.ProductImageRepository.Constants;
+using Business.Repositories.ProductImageRepository.Validation;
 using Core.Aspects.Caching;
 using Core.Aspects.Performance;
-using Business.Repositories.ProductImageRepository.Validation;
-using Business.Repositories.ProductImageRepository.Constants;
+using Core.Aspects.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Result.Abstract;
 using Core.Utilities.Result.Concrete;
 using DataAccess.Repositories.ProductImageRepository;
-using Business.Abstract;
-using Core.Utilities.Business;
-using Microsoft.Win32;
+using Entities.Concrete;
 
 namespace Business.Repositories.ProductImageRepository
 {
@@ -34,13 +27,10 @@ namespace Business.Repositories.ProductImageRepository
         //[SecuredAspect()]
         [ValidationAspect(typeof(ProductImageValidator))]
         [RemoveCacheAspect("IProductImageService.Get")]
-
         public async Task<IResult> Add(ProductImageAddDto productImageModel)
         {
-            IResult result = BusinessRules.Run(
-CheckIfImageExtesionsAllow(productImageModel.Image.FileName),
-CheckIfImageSizeIsLessThanOneMb(productImageModel.Image.Length)
-);
+            IResult result = BusinessRules.Run(CheckIfImageExtesionsAllow(productImageModel.Image.FileName),
+                                               CheckIfImageSizeIsLessThanOneMb(productImageModel.Image.Length));
             if (result != null)
                 return result;
             string fileName = _fileService.FileSaveToServer(productImageModel.Image, "./Content/img");
@@ -57,7 +47,6 @@ CheckIfImageSizeIsLessThanOneMb(productImageModel.Image.Length)
         [SecuredAspect()]
         [ValidationAspect(typeof(ProductImageValidator))]
         [RemoveCacheAspect("IProductImageService.Get")]
-
         public async Task<IResult> Update(ProductImage productImage)
         {
             await _productImageDal.Update(productImage);
@@ -66,7 +55,6 @@ CheckIfImageSizeIsLessThanOneMb(productImageModel.Image.Length)
 
         [SecuredAspect()]
         [RemoveCacheAspect("IProductImageService.Get")]
-
         public async Task<IResult> Delete(ProductImage productImage)
         {
             await _productImageDal.Delete(productImage);
@@ -86,9 +74,9 @@ CheckIfImageSizeIsLessThanOneMb(productImageModel.Image.Length)
         {
             return new SuccessDataResult<ProductImage>(await _productImageDal.Get(p => p.Id == id));
         }
+
         private IResult CheckIfImageSizeIsLessThanOneMb(long ingSize)
         {
-
             decimal ingMbSize = Convert.ToDecimal(ingSize + 0.000001);
             if (ingMbSize > 5)
             {
@@ -96,6 +84,7 @@ CheckIfImageSizeIsLessThanOneMb(productImageModel.Image.Length)
             }
             return new SuccessResult();
         }
+
         private IResult CheckIfImageExtesionsAllow(string fileName)
         {
             var ext = fileName.Substring(fileName.LastIndexOf('.'));

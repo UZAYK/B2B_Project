@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using FluentValidation;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Business.Repositories.CustomerRepository.Constants
 {
     public class CustomerMessages

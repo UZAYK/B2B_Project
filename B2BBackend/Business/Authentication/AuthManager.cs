@@ -1,5 +1,4 @@
 ﻿using Business.Abstract;
-using Business.Aspects.Secured;
 using Business.Repositories.CustomerRepository;
 using Business.Repositories.UserRepository;
 using Business.ValidationRules.FluentValidation;
@@ -47,6 +46,7 @@ namespace Business.Authentication
             }
             return new ErrorDataResult<Token>("Kullanıcı maili ya da şifre bilgisi yanlış");
         }
+
         public async Task<IDataResult<Token>> CustomerLogin(CustomerLoginDto customerLoginDto)
         {
             var customer = await _customerService.GetByEmail(customerLoginDto.Email);
