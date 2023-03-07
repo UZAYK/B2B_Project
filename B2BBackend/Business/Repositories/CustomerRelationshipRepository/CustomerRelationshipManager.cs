@@ -26,7 +26,7 @@ namespace Business.Repositories.CustomerRelationshipsRepository
             _customerRelationshipsDal = customerRelationshipsDal;
         }
 
-        //[SecuredAspect()]
+        ////[SecuredAspect()]
         [ValidationAspect(typeof(CustomerRelationshipValidator))]
         [RemoveCacheAspect("ICustomerRelationshipsService.Get")]
 
@@ -36,7 +36,7 @@ namespace Business.Repositories.CustomerRelationshipsRepository
             return new SuccessResult(CustomerRelationshipMessages.Added);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [ValidationAspect(typeof(CustomerRelationshipValidator))]
         [RemoveCacheAspect("ICustomerRelationshipsService.Get")]
 
@@ -46,7 +46,7 @@ namespace Business.Repositories.CustomerRelationshipsRepository
             return new SuccessResult(CustomerRelationshipMessages.Updated);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [RemoveCacheAspect("ICustomerRelationshipsService.Get")]
 
         public async Task<IResult> Delete(CustomerRelationship customerRelationships)
@@ -55,7 +55,7 @@ namespace Business.Repositories.CustomerRelationshipsRepository
             return new SuccessResult(CustomerRelationshipMessages.Deleted);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [CacheAspect()]
         [PerformanceAspect()]
         public async Task<IDataResult<List<CustomerRelationship>>> GetList()
@@ -63,7 +63,7 @@ namespace Business.Repositories.CustomerRelationshipsRepository
             return new SuccessDataResult<List<CustomerRelationship>>(await _customerRelationshipsDal.GetAll());
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         public async Task<IDataResult<CustomerRelationship>> GetById(int id)
         {
             return new SuccessDataResult<CustomerRelationship>(await _customerRelationshipsDal.Get(p => p.Id == id));

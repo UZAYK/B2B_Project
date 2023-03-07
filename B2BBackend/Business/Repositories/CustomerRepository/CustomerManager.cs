@@ -23,7 +23,7 @@ namespace Business.Repositories.CustomerRepository
             _customerDal = customerDal;
         }
 
-        //[SecuredAspect()]
+        ////[SecuredAspect()]
         [ValidationAspect(typeof(CustomerValidator))]
         [RemoveCacheAspect("ICustomerService.Get")]
         public async Task<IResult> Add(CustomerRegisterDto customerRegister)
@@ -52,7 +52,7 @@ namespace Business.Repositories.CustomerRepository
             return result;
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [ValidationAspect(typeof(CustomerValidator))]
         [RemoveCacheAspect("ICustomerService.Get")]
         public async Task<IResult> Update(Customer customer)
@@ -61,7 +61,7 @@ namespace Business.Repositories.CustomerRepository
             return new SuccessResult(CustomerMessages.Updated);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [RemoveCacheAspect("ICustomerService.Get")]
         public async Task<IResult> Delete(Customer customer)
         {
@@ -69,7 +69,7 @@ namespace Business.Repositories.CustomerRepository
             return new SuccessResult(CustomerMessages.Deleted);
         }
 
-        //[SecuredAspect()]
+        ////[SecuredAspect()]
         [CacheAspect()]
         [PerformanceAspect()]
         public async Task<IDataResult<List<Customer>>> GetList()
@@ -77,7 +77,7 @@ namespace Business.Repositories.CustomerRepository
             return new SuccessDataResult<List<Customer>>(await _customerDal.GetAll());
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         public async Task<IDataResult<Customer>> GetById(int id)
         {
             return new SuccessDataResult<Customer>(await _customerDal.Get(p => p.Id == id));

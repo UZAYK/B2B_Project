@@ -26,7 +26,7 @@ namespace Business.Repositories.PriceListDetailRepository
             _priceListDetailDal = priceListDetailDal;
         }
 
-        //[SecuredAspect()]
+        ////[SecuredAspect()]
         [ValidationAspect(typeof(PriceListDetailValidator))]
         [RemoveCacheAspect("IPriceListDetailService.Get")]
 
@@ -36,7 +36,7 @@ namespace Business.Repositories.PriceListDetailRepository
             return new SuccessResult(PriceListDetailMessages.Added);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [ValidationAspect(typeof(PriceListDetailValidator))]
         [RemoveCacheAspect("IPriceListDetailService.Get")]
 
@@ -46,7 +46,7 @@ namespace Business.Repositories.PriceListDetailRepository
             return new SuccessResult(PriceListDetailMessages.Updated);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [RemoveCacheAspect("IPriceListDetailService.Get")]
 
         public async Task<IResult> Delete(PriceListDetail priceListDetail)
@@ -55,19 +55,20 @@ namespace Business.Repositories.PriceListDetailRepository
             return new SuccessResult(PriceListDetailMessages.Deleted);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [CacheAspect()]
         [PerformanceAspect()]
         public async Task<IDataResult<List<PriceListDetail>>> GetList()
-        {
-            return new SuccessDataResult<List<PriceListDetail>>(await _priceListDetailDal.GetAll());
-        }
+        => new SuccessDataResult<List<PriceListDetail>>(await _priceListDetailDal.GetAll());
+        
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         public async Task<IDataResult<PriceListDetail>> GetById(int id)
-        {
-            return new SuccessDataResult<PriceListDetail>(await _priceListDetailDal.Get(p => p.Id == id));
-        }
+        => new SuccessDataResult<PriceListDetail>(await _priceListDetailDal.Get(p => p.Id == id));
+
+
+        public Task<List<PriceListDetail>> GetListByProductId(int productId)
+        => _priceListDetailDal.GetAll(p => p.ProductId == productId);
 
     }
 }

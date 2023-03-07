@@ -16,6 +16,7 @@ namespace Core.Aspects.Caching
             _duration = 60;
             _cacheManager = ServiceTool.ServiceProvider.GetService<ICacheManager>();
         }
+
         public CacheAspect(int duration)
         {
             _duration = duration;

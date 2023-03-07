@@ -16,6 +16,8 @@ namespace Business.Repositories.ProductImageRepository
 
         Task<IDataResult<List<ProductImage>>> GetList();
 
+        Task<List<ProductImage>> GetListByProductId(int productId);
+
         Task<IDataResult<ProductImage>> GetById(int id);
     }
 }

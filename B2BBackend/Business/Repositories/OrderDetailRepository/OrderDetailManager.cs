@@ -26,7 +26,7 @@ namespace Business.Repositories.OrderDetailRepository
             _orderDetailDal = orderDetailDal;
         }
 
-        //[SecuredAspect()]
+        ////[SecuredAspect()]
         [ValidationAspect(typeof(OrderDetailValidator))]
         [RemoveCacheAspect("IOrderDetailService.Get")]
 
@@ -36,7 +36,7 @@ namespace Business.Repositories.OrderDetailRepository
             return new SuccessResult(OrderDetailMessages.Added);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [ValidationAspect(typeof(OrderDetailValidator))]
         [RemoveCacheAspect("IOrderDetailService.Get")]
 
@@ -46,7 +46,7 @@ namespace Business.Repositories.OrderDetailRepository
             return new SuccessResult(OrderDetailMessages.Updated);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [RemoveCacheAspect("IOrderDetailService.Get")]
 
         public async Task<IResult> Delete(OrderDetail orderDetail)
@@ -55,7 +55,7 @@ namespace Business.Repositories.OrderDetailRepository
             return new SuccessResult(OrderDetailMessages.Deleted);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [CacheAspect()]
         [PerformanceAspect()]
         public async Task<IDataResult<List<OrderDetail>>> GetList()
@@ -63,7 +63,7 @@ namespace Business.Repositories.OrderDetailRepository
             return new SuccessDataResult<List<OrderDetail>>(await _orderDetailDal.GetAll());
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         public async Task<IDataResult<OrderDetail>> GetById(int id)
         {
             return new SuccessDataResult<OrderDetail>(await _orderDetailDal.Get(p => p.Id == id));

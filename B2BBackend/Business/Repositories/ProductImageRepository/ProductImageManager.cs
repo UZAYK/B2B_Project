@@ -26,7 +26,7 @@ namespace Business.Repositories.ProductImageRepository
             _fileService = fileService;
         }
 
-        //[SecuredAspect()]
+        ////[SecuredAspect()]
         [ValidationAspect(typeof(ProductImageValidator))]
         [RemoveCacheAspect("IProductImageService.Get")]
         public async Task<IResult> Add(ProductImageAddDto productImageModel)
@@ -52,7 +52,7 @@ namespace Business.Repositories.ProductImageRepository
             return new SuccessResult(ProductImageMessages.Added);
         }
 
-        //[SecuredAspect()]
+        ////[SecuredAspect()]
         [ValidationAspect(typeof(ProductImageValidator))]
         [RemoveCacheAspect("IProductImageService.Get")]
         [TransactionAspect]
@@ -74,15 +74,18 @@ namespace Business.Repositories.ProductImageRepository
             return new SuccessResult(ProductImageMessages.Updated);
         }
 
-        [SecuredAspect()]
+        ////[SecuredAspect()]
         [RemoveCacheAspect("IProductImageService.Get")]
         public async Task<IResult> Delete(ProductImage productImage)
         {
+            string path = @"./Content/img/" + productImage.ImageUrl; ;
+            _fileService.FileDeleteToServer(path);
+
             await _productImageDal.Delete(productImage);
             return new SuccessResult(ProductImageMessages.Deleted);
         }
 
-        //[SecuredAspect()]
+        ////[SecuredAspect()]
         [CacheAspect()]
         [PerformanceAspect()]
         public async Task<IDataResult<List<ProductImage>>> GetList()
@@ -90,7 +93,12 @@ namespace Business.Repositories.ProductImageRepository
             return new SuccessDataResult<List<ProductImage>>(await _productImageDal.GetAll());
         }
 
-        [SecuredAspect()]
+        public async Task<List<ProductImage>> GetListByProductId(int productId)
+        {
+            return await _productImageDal.GetAll(x => x.ProductId == productId);
+        }
+
+        ////[SecuredAspect()]
         public async Task<IDataResult<ProductImage>> GetById(int id)
         {
             return new SuccessDataResult<ProductImage>(await _productImageDal.Get(p => p.Id == id));
@@ -118,7 +126,7 @@ namespace Business.Repositories.ProductImageRepository
             return new SuccessResult();
         }
 
-        //[SecuredAspect()]
+        ////[SecuredAspect()]
         //[TransactionAspect()]
         public async Task<IResult> SetMainImage(int id)
         {

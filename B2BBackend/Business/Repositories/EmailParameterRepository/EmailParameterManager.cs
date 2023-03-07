@@ -21,7 +21,7 @@ namespace Business.Repositories.EmailParameterRepository
             _emailParameterDal = emailParameterDal;
         }
 
-        //[SecuredAspect()]
+        ////[SecuredAspect()]
         [ValidationAspect(typeof(EmailParameterValidator))]
         [RemoveCacheAspect("IEmailParameterService.Get")]
         public async Task<IResult> Add(EmailParameter emailParameter)
@@ -31,7 +31,7 @@ namespace Business.Repositories.EmailParameterRepository
 
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [RemoveCacheAspect("IEmailParameterService.Get")]
         public async Task<IResult> Delete(EmailParameter emailParameter)
         {
@@ -82,7 +82,7 @@ namespace Business.Repositories.EmailParameterRepository
 
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [ValidationAspect(typeof(EmailParameterValidator))]
         [RemoveCacheAspect("IEmailParameterService.Get")]
         public async Task<IResult> Update(EmailParameter emailParameter)

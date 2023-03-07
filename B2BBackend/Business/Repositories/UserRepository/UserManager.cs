@@ -81,7 +81,7 @@ namespace Business.Repositories.UserRepository
             return result;
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [ValidationAspect(typeof(UserValidator))]
         [RemoveCacheAspect("IUserService.Get")]
         public async Task<IResult> Update(User user)
@@ -90,7 +90,7 @@ namespace Business.Repositories.UserRepository
             return new SuccessResult(UserMessages.UpdatedUser);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [RemoveCacheAspect("IUserService.Get")]
         public async Task<IResult> Delete(User user)
         {
@@ -98,7 +98,7 @@ namespace Business.Repositories.UserRepository
             return new SuccessResult(UserMessages.DeletedUser);
         }
 
-        //[SecuredAspect()]
+        ////[SecuredAspect()]
         [CacheAspect(60)]
         [PerformanceAspect(3)]
         public async Task<IDataResult<List<User>>> GetList()
@@ -116,7 +116,7 @@ namespace Business.Repositories.UserRepository
             return await _userDal.Get(p => p.Id == id);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [ValidationAspect(typeof(UserChangePasswordValidator))]
         public async Task<IResult> ChangePassword(UserChangePasswordDto userChangePasswordDto)
         {
