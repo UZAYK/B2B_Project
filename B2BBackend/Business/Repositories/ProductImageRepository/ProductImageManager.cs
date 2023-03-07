@@ -41,7 +41,8 @@ namespace Business.Repositories.ProductImageRepository
                     ProductImage productImage = new()
                     {
                         ImageUrl = fileName,
-                        ProductId = productImageModel.ProductId
+                        ProductId = productImageModel.ProductId,
+                        IsMainImage = false
                     };
                     await _productImageDal.Add(productImage);
                 }
@@ -60,12 +61,14 @@ namespace Business.Repositories.ProductImageRepository
             IResult result = BusinessRules.Run(CheckIfImageExtesionsAllow(productUpdateImage.Image.FileName),
                                               CheckIfImageSizeIsLessThanOneMb(productUpdateImage.Image.Length));
             if (result is not null) return result;
+
             string path = @"./Content/img/" + productUpdateImage.ImageUrl; ;
             _fileService.FileDeleteToServer(path);
-
             string fileName = _fileService.FileSaveToServer(productUpdateImage.Image, "./Content/img/");
+
             var model = await _productImageDal.Get(x => x.Id == productUpdateImage.Id);
             model.ImageUrl = fileName;
+            model.IsMainImage = productUpdateImage.IsMainImage;
 
             await _productImageDal.Update(model);
             return new SuccessResult(ProductImageMessages.Updated);
@@ -113,6 +116,22 @@ namespace Business.Repositories.ProductImageRepository
                 return new ErrorResult("Eklediðiniz resim .jpg, jpeg, gif, .png türlerinden biri olmalýdýr!");
             }
             return new SuccessResult();
+        }
+
+        //[SecuredAspect()]
+        //[TransactionAspect()]
+        public async Task<IResult> SetMainImage(int id)
+        {
+            var model = await _productImageDal.Get(x => x.Id == id);
+            var productImages = await _productImageDal.GetAll(p => p.ProductId == model.ProductId);
+            foreach (var productImage in productImages)
+            {
+                productImage.IsMainImage = false;
+                await _productImageDal.Update(productImage);
+            }
+            model.IsMainImage = true;
+            await _productImageDal.Update(model);
+            return new SuccessResult(ProductImageMessages.SetMainImage);
         }
     }
 }
