@@ -1,5 +1,6 @@
 using Core.Utilities.Result.Abstract;
 using Entities.Concrete;
+using Entities.Dtos;
 
 namespace Business.Repositories.ProductRepository
 {

@@ -4,12 +4,14 @@ using Business.Repositories.ProductImageRepository.Constants;
 using Business.Repositories.ProductImageRepository.Validation;
 using Core.Aspects.Caching;
 using Core.Aspects.Performance;
+using Core.Aspects.Transaction;
 using Core.Aspects.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Result.Abstract;
 using Core.Utilities.Result.Concrete;
 using DataAccess.Repositories.ProductImageRepository;
 using Entities.Concrete;
+using Entities.Dtos;
 
 namespace Business.Repositories.ProductImageRepository
 {
@@ -29,27 +31,43 @@ namespace Business.Repositories.ProductImageRepository
         [RemoveCacheAspect("IProductImageService.Get")]
         public async Task<IResult> Add(ProductImageAddDto productImageModel)
         {
-            IResult result = BusinessRules.Run(CheckIfImageExtesionsAllow(productImageModel.Image.FileName),
-                                               CheckIfImageSizeIsLessThanOneMb(productImageModel.Image.Length));
-            if (result != null)
-                return result;
-            string fileName = _fileService.FileSaveToServer(productImageModel.Image, "./Content/img");
-            ProductImage productImage = new()
+            foreach (var image in productImageModel.Image)
             {
-                ImageUrl = fileName,
-                ProductId = productImageModel.ProductId
-            };
-
-            await _productImageDal.Add(productImage);
+                IResult result = BusinessRules.Run(CheckIfImageExtesionsAllow(image.FileName),
+                                                   CheckIfImageSizeIsLessThanOneMb(productImageModel.Image.Length));
+                if (result is null)
+                {
+                    string fileName = _fileService.FileSaveToServer(image, "./Content/img");
+                    ProductImage productImage = new()
+                    {
+                        ImageUrl = fileName,
+                        ProductId = productImageModel.ProductId
+                    };
+                    await _productImageDal.Add(productImage);
+                }
+                else
+                    return new ErrorResult(ProductImageMessages.Error_Added);
+            }
             return new SuccessResult(ProductImageMessages.Added);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [ValidationAspect(typeof(ProductImageValidator))]
         [RemoveCacheAspect("IProductImageService.Get")]
-        public async Task<IResult> Update(ProductImage productImage)
+        [TransactionAspect]
+        public async Task<IResult> Update(ProductImageUpdateDto productUpdateImage)
         {
-            await _productImageDal.Update(productImage);
+            IResult result = BusinessRules.Run(CheckIfImageExtesionsAllow(productUpdateImage.Image.FileName),
+                                              CheckIfImageSizeIsLessThanOneMb(productUpdateImage.Image.Length));
+            if (result is not null) return result;
+            string path = @"./Content/img/" + productUpdateImage.ImageUrl; ;
+            _fileService.FileDeleteToServer(path);
+
+            string fileName = _fileService.FileSaveToServer(productUpdateImage.Image, "./Content/img/");
+            var model = await _productImageDal.Get(x => x.Id == productUpdateImage.Id);
+            model.ImageUrl = fileName;
+
+            await _productImageDal.Update(model);
             return new SuccessResult(ProductImageMessages.Updated);
         }
 
@@ -61,7 +79,7 @@ namespace Business.Repositories.ProductImageRepository
             return new SuccessResult(ProductImageMessages.Deleted);
         }
 
-        [SecuredAspect()]
+        //[SecuredAspect()]
         [CacheAspect()]
         [PerformanceAspect()]
         public async Task<IDataResult<List<ProductImage>>> GetList()
@@ -77,7 +95,7 @@ namespace Business.Repositories.ProductImageRepository
 
         private IResult CheckIfImageSizeIsLessThanOneMb(long ingSize)
         {
-            decimal ingMbSize = Convert.ToDecimal(ingSize + 0.000001);
+            decimal ingMbSize = Convert.ToDecimal(ingSize * 0.000001);
             if (ingMbSize > 5)
             {
                 return new ErrorResult("Yüklediðiniz resmi boyutu en fazla 1mb olmalýdýr");

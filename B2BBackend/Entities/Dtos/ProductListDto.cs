@@ -1,4 +1,6 @@
-﻿namespace Entities.Concrete
+﻿using Entities.Concrete;
+
+namespace Entities.Dtos
 {
     public class ProductListDto : Product
     {

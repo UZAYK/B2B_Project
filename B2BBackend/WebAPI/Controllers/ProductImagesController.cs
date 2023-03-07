@@ -1,5 +1,6 @@
 using Business.Repositories.ProductImageRepository;
 using Entities.Concrete;
+using Entities.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -27,7 +28,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Update(ProductImage productImage)
+        public async Task<IActionResult> Update([FromForm] ProductImageUpdateDto productImage)
         {
             var result = await _productImageService.Update(productImage);
             if (result.Success)

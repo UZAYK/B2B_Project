@@ -1,6 +1,7 @@
 using Core.DataAccess.EntityFramework;
 using DataAccess.Context.EntityFramework;
 using Entities.Concrete;
+using Entities.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories.ProductRepository

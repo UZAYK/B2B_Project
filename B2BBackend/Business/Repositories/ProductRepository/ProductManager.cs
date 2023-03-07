@@ -8,6 +8,7 @@ using Core.Utilities.Result.Abstract;
 using Core.Utilities.Result.Concrete;
 using DataAccess.Repositories.ProductRepository;
 using Entities.Concrete;
+using Entities.Dtos;
 
 namespace Business.Repositories.ProductRepository
 {

@@ -51,10 +51,8 @@ namespace Business.Concrete
         {
             try
             {
-                if (System.IO.File.Exists(path))
-                {
-                    System.IO.File.Delete(path);
-                }
+                if (File.Exists(path))
+                    File.Delete(path);
             }
             catch (Exception)
             {

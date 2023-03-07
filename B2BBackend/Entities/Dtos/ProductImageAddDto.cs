@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Entities.Concrete
+namespace Entities.Dtos
 {
     public class ProductImageAddDto
     {
         public int ProductId { get; set; }
-        public IFormFile Image { get; set; }
+        public IFormFile[] Image { get; set; }
     }
 }

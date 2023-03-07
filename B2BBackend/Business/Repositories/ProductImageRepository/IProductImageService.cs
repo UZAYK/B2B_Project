@@ -1,5 +1,6 @@
 using Core.Utilities.Result.Abstract;
 using Entities.Concrete;
+using Entities.Dtos;
 
 namespace Business.Repositories.ProductImageRepository
 {
@@ -7,7 +8,7 @@ namespace Business.Repositories.ProductImageRepository
     {
         Task<IResult> Add(ProductImageAddDto productImage);
 
-        Task<IResult> Update(ProductImage productImage);
+        Task<IResult> Update(ProductImageUpdateDto productImage);
 
         Task<IResult> Delete(ProductImage productImage);
 
