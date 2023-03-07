@@ -30,7 +30,7 @@ namespace Business.Authentication
         public async Task<IDataResult<Token>> UserLogin(LoginAuthDto loginDto)
         {
             var user = await _userService.GetByEmail(loginDto.Email);
-            if (user == null)
+            if (user is null)
                 return new ErrorDataResult<Token>("Kullanıcı maili sistemde bulunamadı!");
 
             //if (!user.IsConfirm)
@@ -50,15 +50,15 @@ namespace Business.Authentication
         public async Task<IDataResult<Token>> CustomerLogin(CustomerLoginDto customerLoginDto)
         {
             var customer = await _customerService.GetByEmail(customerLoginDto.Email);
-            if (customer == null)
+            if (customer is null)
+            {
                 return new ErrorDataResult<Token>("Kullanıcı maili sistemde bulunamadı!");
-
+            }
+            var result = HashingHelper.VerifyPasswordHash(customerLoginDto.Password, customer.PasswordHash, customer.PasswordSalt);
+            if (customer is null)
+                return new ErrorDataResult<Token>("Kullanıcı maili sistemde bulunamadı!");
             //if (!user.IsConfirm)
             //    return new ErrorDataResult<Token>("Kullanıcı maili onaylanmamış!");
-
-            var result = HashingHelper.VerifyPasswordHash(customerLoginDto.Password, customer.PasswordHash, customer.PasswordSalt);
-            List<OperationClaim> operationClaims = await _userService.GetUserOperationClaims(customer.Id);
-
             if (result)
             {
                 Token token = new();
@@ -77,7 +77,7 @@ namespace Business.Authentication
                 CheckIfImageSizeIsLessThanOneMb(registerDto.Image.Length)
                 );
 
-            if (result != null)
+            if (result is not null)
             {
                 return result;
             }
@@ -89,7 +89,7 @@ namespace Business.Authentication
         private async Task<IResult> CheckIfEmailExists(string email)
         {
             var list = await _userService.GetByEmail(email);
-            if (list != null)
+            if (list is not null)
             {
                 return new ErrorResult("Bu mail adresi daha önce kullanılmış");
             }

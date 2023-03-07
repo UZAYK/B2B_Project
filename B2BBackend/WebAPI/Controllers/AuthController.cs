@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Login(LoginAuthDto authDto)
+        public async Task<IActionResult> UserLogin(LoginAuthDto authDto)
         {
             var result = await _authService.UserLogin(authDto);
             if (result.Success)

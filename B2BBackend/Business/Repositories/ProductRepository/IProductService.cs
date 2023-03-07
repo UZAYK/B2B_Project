@@ -15,5 +15,6 @@ namespace Business.Repositories.ProductRepository
         Task<IResult> Delete(Product product);
         Task<IDataResult<List<Product>>> GetList();
         Task<IDataResult<Product>> GetById(int id);
+        Task<IDataResult<List<ProductListDto>>> GetProductList(int customerId);
     }
 }

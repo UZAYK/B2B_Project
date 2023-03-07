@@ -16,7 +16,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Add(ProductImage productImage)
+        public async Task<IActionResult> Add([FromForm] ProductImageAddDto productImage)
         {
             var result = await _productImageService.Add(productImage);
             if (result.Success)

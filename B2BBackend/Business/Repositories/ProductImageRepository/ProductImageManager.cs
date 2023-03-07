@@ -14,24 +14,42 @@ using Business.Repositories.ProductImageRepository.Constants;
 using Core.Utilities.Result.Abstract;
 using Core.Utilities.Result.Concrete;
 using DataAccess.Repositories.ProductImageRepository;
+using Business.Abstract;
+using Core.Utilities.Business;
+using Microsoft.Win32;
 
 namespace Business.Repositories.ProductImageRepository
 {
     public class ProductImageManager : IProductImageService
     {
         private readonly IProductImageDal _productImageDal;
+        private readonly IFileService _fileService;
 
-        public ProductImageManager(IProductImageDal productImageDal)
+        public ProductImageManager(IProductImageDal productImageDal, IFileService fileService)
         {
             _productImageDal = productImageDal;
+            _fileService = fileService;
         }
 
         //[SecuredAspect()]
         [ValidationAspect(typeof(ProductImageValidator))]
         [RemoveCacheAspect("IProductImageService.Get")]
 
-        public async Task<IResult> Add(ProductImage productImage)
+        public async Task<IResult> Add(ProductImageAddDto productImageModel)
         {
+            IResult result = BusinessRules.Run(
+CheckIfImageExtesionsAllow(productImageModel.Image.FileName),
+CheckIfImageSizeIsLessThanOneMb(productImageModel.Image.Length)
+);
+            if (result != null)
+                return result;
+            string fileName = _fileService.FileSaveToServer(productImageModel.Image, "./Content/img");
+            ProductImage productImage = new()
+            {
+                ImageUrl = fileName,
+                ProductId = productImageModel.ProductId
+            };
+
             await _productImageDal.Add(productImage);
             return new SuccessResult(ProductImageMessages.Added);
         }
@@ -68,6 +86,26 @@ namespace Business.Repositories.ProductImageRepository
         {
             return new SuccessDataResult<ProductImage>(await _productImageDal.Get(p => p.Id == id));
         }
+        private IResult CheckIfImageSizeIsLessThanOneMb(long ingSize)
+        {
 
+            decimal ingMbSize = Convert.ToDecimal(ingSize + 0.000001);
+            if (ingMbSize > 5)
+            {
+                return new ErrorResult("Yüklediðiniz resmi boyutu en fazla 1mb olmalýdýr");
+            }
+            return new SuccessResult();
+        }
+        private IResult CheckIfImageExtesionsAllow(string fileName)
+        {
+            var ext = fileName.Substring(fileName.LastIndexOf('.'));
+            var extension = ext.ToLower();
+            List<string> AllowFileExtensions = new List<string> { ".jpg", ".jpeg", ".gif", ".png" };
+            if (!AllowFileExtensions.Contains(extension))
+            {
+                return new ErrorResult("Eklediðiniz resim .jpg, jpeg, gif, .png türlerinden biri olmalýdýr!");
+            }
+            return new SuccessResult();
+        }
     }
 }

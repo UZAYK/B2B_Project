@@ -10,7 +10,7 @@ namespace Business.Repositories.ProductImageRepository
 {
     public interface IProductImageService
     {
-        Task<IResult> Add(ProductImage productImage);
+        Task<IResult> Add(ProductImageAddDto productImage);
         Task<IResult> Update(ProductImage productImage);
         Task<IResult> Delete(ProductImage productImage);
         Task<IDataResult<List<ProductImage>>> GetList();

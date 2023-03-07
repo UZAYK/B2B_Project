@@ -49,7 +49,7 @@ namespace Core.Extensions
             return httpContext.Response.WriteAsync(new ErrorHandlerDetails
             {
                 StatusCode = httpContext.Response.StatusCode,
-                Message = e.Message,
+                Message = "Error Message:" + " " + e.Message + ", " + "Error Message Detail:" + e.InnerException is null ? "object is null" : e.InnerException?.ToString(),
             }.ToString());
         }
     }

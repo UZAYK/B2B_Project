@@ -11,12 +11,13 @@ namespace Core.Utilities.Security.JWT
 {
     public class TokenHandler : ITokenHandler
     {
-        IConfiguration Configuration;
+        private IConfiguration Configuration;
 
         public TokenHandler(IConfiguration configuration)
         {
             Configuration = configuration;
         }
+
         public Token CreateUserToken(User user, List<OperationClaim> operationClaims)
         {
             Token token = new Token();
@@ -62,11 +63,12 @@ namespace Core.Utilities.Security.JWT
         private IEnumerable<Claim> SetClaims(User user, List<OperationClaim> operationClaims)
         {
             var claims = new List<Claim>();
+            claims.AddName(user.Id.ToString());
             claims.AddName(user.Name);
             claims.AddRoles(operationClaims.Select(p => p.Name).ToArray());
             return claims;
         }
-      
+
         public Token CreateCustomerToken(Customer customer)
         {
             Token token = new Token();
@@ -98,6 +100,7 @@ namespace Core.Utilities.Security.JWT
             token.RefreshToken = CreateRefreshToken();
             return token;
         }
+
         private IEnumerable<Claim> SetCustomerClaims(Customer user)
         {
             var claims = new List<Claim>();
@@ -105,6 +108,5 @@ namespace Core.Utilities.Security.JWT
             claims.AddId(user.Id.ToString());
             return claims;
         }
-
     }
 }
