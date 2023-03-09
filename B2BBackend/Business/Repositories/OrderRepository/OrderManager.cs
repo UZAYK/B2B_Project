@@ -14,25 +14,65 @@ using Business.Repositories.OrderRepository.Constants;
 using Core.Utilities.Result.Abstract;
 using Core.Utilities.Result.Concrete;
 using DataAccess.Repositories.OrderRepository;
+using Entities.Dtos;
+using Business.Repositories.OrderDetailRepository;
+using Autofac.Core;
+using Castle.Core.Resource;
+using Business.Repositories.BasketRepository;
 
 namespace Business.Repositories.OrderRepository
 {
     public class OrderManager : IOrderService
     {
         private readonly IOrderDal _orderDal;
+        private readonly IOrderDetailService _orderDetailService;
+        private readonly IBasketService _basketService;
 
-        public OrderManager(IOrderDal orderDal)
+        public OrderManager(IOrderDal orderDal, IOrderDetailService orderDetailService, IBasketService basketService)
         {
             _orderDal = orderDal;
+            _orderDetailService = orderDetailService;
+            _basketService = basketService;
         }
 
         ////[SecuredAspect()]
         [ValidationAspect(typeof(OrderValidator))]
         [RemoveCacheAspect("IOrderService.Get")]
 
-        public async Task<IResult> Add(Order order)
+        public async Task<IResult> Add(int customerId)
         {
+            var baskets = await _basketService.GetListByCustomerId(customerId);
+            string orderNumber = _orderDal.GetOrderNumber();
+            Order order = new()
+            {
+                CustomerId = baskets.Data.First().CustomerId,
+                Date = DateTime.Now,
+                Status = "Onay Bekliyor",
+                OrderNumber = orderNumber,
+            };
             await _orderDal.Add(order);
+            
+            foreach (var basket in baskets.Data)
+            {
+                OrderDetail orderDetail = new()
+                {
+                    OrderId = order.Id,
+                    Price = basket.Price,
+                    ProductId = basket.ProductId,
+                    Quantity = basket.Quantity
+                };
+                await _orderDetailService.Add(orderDetail);
+                Basket basketEntity = new()
+                {
+
+                    Id = basket.Id,
+                    CustomerId = basket.CustomerId,
+                    Price = basket.Price,
+                    Quantity = basket.Quantity,
+                    ProductId = basket.ProductId
+                };
+                await _basketService.Delete(basketEntity);
+            }
             return new SuccessResult(OrderMessages.Added);
         }
 

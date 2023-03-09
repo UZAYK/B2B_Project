@@ -14,6 +14,7 @@ using Business.Repositories.BasketRepository.Constants;
 using Core.Utilities.Result.Abstract;
 using Core.Utilities.Result.Concrete;
 using DataAccess.Repositories.BasketRepository;
+using Entities.Dtos;
 
 namespace Business.Repositories.BasketRepository
 {
@@ -69,5 +70,9 @@ namespace Business.Repositories.BasketRepository
             return new SuccessDataResult<Basket>(await _basketDal.Get(p => p.Id == id));
         }
 
+        public async Task<IDataResult<List<BasketListDto>>> GetListByCustomerId(int customerId)
+        {
+            return new SuccessDataResult<List<BasketListDto>>(await _basketDal.GetListByCustomerId(customerId));
+        }
     }
 }
