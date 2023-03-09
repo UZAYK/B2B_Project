@@ -58,9 +58,13 @@ namespace Business.Repositories.OrderDetailRepository
         //[SecuredAspect()]
         [CacheAspect()]
         [PerformanceAspect()]
-        public async Task<IDataResult<List<OrderDetail>>> GetList()
+        public async Task<IDataResult<List<OrderDetail>>> GetList(int orderId)
         {
-            return new SuccessDataResult<List<OrderDetail>>(await _orderDetailDal.GetAll());
+            return new SuccessDataResult<List<OrderDetail>>(await _orderDetailDal.GetAll(x => x.OrderId == orderId));
+        }
+        public async Task<List<OrderDetail>> GetListByProductId(int productId)
+        {
+            return await _orderDetailDal.GetAll(x => x.ProductId == productId);
         }
 
         //[SecuredAspect()]

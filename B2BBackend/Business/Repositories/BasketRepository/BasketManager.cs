@@ -63,6 +63,11 @@ namespace Business.Repositories.BasketRepository
         {
             return new SuccessDataResult<List<Basket>>(await _basketDal.GetAll());
         }
+       
+        public async Task<List<Basket>> GetListByProductId(int productId)
+        {
+            return await _basketDal.GetAll(x => x.ProductId == productId);
+        }
 
         //[SecuredAspect()]
         public async Task<IDataResult<Basket>> GetById(int id)

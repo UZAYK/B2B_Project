@@ -51,7 +51,7 @@ namespace Business.Repositories.OrderRepository
                 OrderNumber = orderNumber,
             };
             await _orderDal.Add(order);
-            
+
             foreach (var basket in baskets.Data)
             {
                 OrderDetail orderDetail = new()
@@ -87,10 +87,12 @@ namespace Business.Repositories.OrderRepository
         }
 
         //[SecuredAspect()]
-        [RemoveCacheAspect("IOrderService.Get")]
+        //[RemoveCacheAspect("IOrderService.Get")]
 
         public async Task<IResult> Delete(Order order)
         {
+            var details = await _orderDetailService.GetList(order.Id);
+            details.Data.ForEach(async x => { await _orderDetailService.Delete(x); });
             await _orderDal.Delete(order);
             return new SuccessResult(OrderMessages.Deleted);
         }
