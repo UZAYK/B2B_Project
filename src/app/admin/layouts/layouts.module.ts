@@ -22,7 +22,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     NavbarModule,
     AsideModule,
-    FooterModule
+    FooterModule,
   ],
   exports: [
     LayoutsComponent,
