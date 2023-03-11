@@ -5,7 +5,7 @@ import { LayoutsComponent } from './admin/layouts/layouts.component';
 
 const routes: Routes = [
   {
-    path:"",
+    path:"admin",
     component:LayoutsComponent,
 
     children:[
